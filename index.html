@@ -1,1 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krispy Sips - Daily Sales Tracker</title>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --panel-bg: #ffffff;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --pending-color: #f59e0b;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .date-badge {
+            background: var(--panel-bg);
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Panel: Order Logging & History */
+        .left-panel {
+            flex: 7;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        .order-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        select, input[type="number"] {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+
+        .btn-add {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            height: 42px;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-hover);
+        }
+
+        .table-container {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: var(--bg-color);
+            padding: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 15px;
+        }
+
+        .status-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Right Panel: Auto Counting Sidebar */
+        .sidebar {
+            flex: 3;
+            background: var(--panel-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .stat-card {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .stat-card.total {
+            background: #e0e7ff;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 6px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Krispy Sips — Sales Register</h1>
+        <div class="date-badge" id="currentDate">Date: --/--/----</div>
+    </header>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <div class="order-form">
+                <div class="form-group">
+                    <label for="itemSelect">Select Item</label>
+                    <select id="itemSelect">
+                        <option value="100" data-name="Large Chicken Loaded Chips">Large Chicken Loaded Chips (₹100)</option>
+                        <option value="60" data-name="Small Chicken Loaded Chips">Small Chicken Loaded Chips (₹60)</option>
+                        <option value="70" data-name="Large Veg Loaded Chips">Large Veg Loaded Chips (₹70)</option>
+                        <option value="40" data-name="Small Veg Loaded Chips">Small Veg Loaded Chips (₹40)</option>
+                        <option value="120" data-name="Boba Tea">Boba Tea (₹120)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemQty">Quantity</label>
+                    <input type="number" id="itemQty" value="1" min="1">
+                </div>
+                <button class="btn-add" id="addOrderBtn">Add Order</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item Details</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Received?</th>
+                            <th>Paid?</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h2>Live Summary Bar</h2>
+            
+            <div class="stat-card total">
+                <span class="stat-label">Total Day Sales</span>
+                <span class="stat-value" id="totalSales">₹0</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Orders (Received / Total)</span>
+                <span class="stat-value" id="orderCount">0 / 0</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Payments Complete</span>
+                <span class="stat-value" id="paymentCount" style="color: var(--success-color);">0 Paid</span>
+            </div>
+
+            <div>
+                <h3 style="font-size: 14px; margin-bottom: 10px; color: var(--text-muted); text-transform: uppercase;">Item Wise Breakdown</h3>
+                <ul class="breakdown-list" id="itemBreakdown">
+                    </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set Today's Date automatically
+        const today = new Date();
+        document.getElementById('currentDate').innerText = `Date: ${today.toLocaleDateString('en-IN')}`;
+
+        // Central Application Data State
+        let orders = [];
+
+        const itemSelect = document.getElementById('itemSelect');
+        const itemQty = document.getElementById('itemQty');
+        const addOrderBtn = document.getElementById('addOrderBtn');
+        const orderTableBody = document.getElementById('orderTableBody');
+
+        // Event Listener: Add Order
+        addOrderBtn.addEventListener('click', () => {
+            const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+            const name = selectedOption.getAttribute('data-name');
+            const pricePerUnit = parseInt(itemSelect.value);
+            const qty = parseInt(itemQty.value) || 1;
+            const totalPrice = pricePerUnit * qty;
+
+            const newOrder = {
+                id: Date.now(),
+                name: name,
+                qty: qty,
+                price: totalPrice,
+                isReceived: false,
+                isPaid: false
+            };
+
+            orders.push(newOrder);
+            renderApp();
+            itemQty.value = 1; // reset quantity input
+        });
+
+        // Toggle Status Functions
+        function toggleReceived(id) {
+            const order = orders.find(o => o.id === id);
+            if(order) order.isReceived = !order.isReceived;
+            renderApp();
+        }
+
+        function togglePaid(id) {
+            const order = orders.find(o => o.id === id);
+            if(order) order.isPaid = !order.isPaid;
+            renderApp();
+        }
+
+        function deleteOrder(id) {
+            orders = orders.filter(o => o.id !== id);
+            renderApp();
+        }
+
+        // Auto-Counting and Render Engine
+        function renderApp() {
+            // 1. Clear current table elements
+            orderTableBody.innerHTML = '';
+
+            let totalSalesAmount = 0;
+            let receivedCount = 0;
+            let paidCount = 0;
+
+            // Track detailed counts for each menu item specifically
+            const breakdown = {
+                "Large Chicken Loaded Chips": 0,
+                "Small Chicken Loaded Chips": 0,
+                "Large Veg Loaded Chips": 0,
+                "Small Veg Loaded Chips": 0,
+                "Boba Tea": 0
+            };
+
+            // 2. Build table rows and process metrics
+            orders.forEach(order => {
+                totalSalesAmount += order.price;
+                if (order.isReceived) receivedCount++;
+                if (order.isPaid) paidCount++;
+                if (breakdown.hasOwnProperty(order.name)) {
+                    breakdown[order.name] += order.qty;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${order.name}</strong></td>
+                    <td>${order.qty}</td>
+                    <td>₹${order.price}</td>
+                    <td><input type="checkbox" class="status-checkbox" ${order.isReceived ? 'checked' : ''} onchange="toggleReceived(${order.id})"></td>
+                    <td><input type="checkbox" class="status-checkbox" ${order.isPaid ? 'checked' : ''} onchange="togglePaid(${order.id})"></td>
+                    <td><button class="btn-delete" onclick="deleteOrder(${order.id})">✕</button></td>
+                `;
+                orderTableBody.appendChild(tr);
+            });
+
+            // 3. Update the Live Auto-Counting Sidebar Panels
+            document.getElementById('totalSales').innerText = `₹${totalSalesAmount}`;
+            document.getElementById('orderCount').innerText = `${receivedCount} / ${orders.length}`;
+            document.getElementById('paymentCount').innerText = `${paidCount} Paid (${orders.length - paidCount} Unpaid)`;
+
+            // 4. Update Item Wise Breakdown UI
+            const breakdownList = document.getElementById('itemBreakdown');
+            breakdownList.innerHTML = '';
+            for (const [itemName, itemVolume] of Object.entries(breakdown)) {
+                const li = document.createElement('li');
+                li.className = 'breakdown-item';
+                li.innerHTML = `<span>${itemName}</span><strong>x${itemVolume}</strong>`;
+                breakdownList.appendChild(li);
+            }
+        }
+
+        // Initialize empty rendering state on startup
+        renderApp();
+    </script>
+</body>
+</html>
