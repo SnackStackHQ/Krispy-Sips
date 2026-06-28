@@ -11,13 +11,13 @@
       {
         "item": "Small Veg Patis",
         "price": "60",
-        "received": false,
+        "received": true,
         "paid": false
       },
       {
         "item": "Boba Tea",
         "price": "120",
-        "received": false,
+        "received": true,
         "paid": false
       }
     ]
