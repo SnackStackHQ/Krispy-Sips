@@ -1,31 +1,3 @@
 {
-  "2026-06-28": [
-    {
-      "id": 1782661396483,
-      "time": "09:13 PM",
-      "name": "Large Chicken Loaded Chips",
-      "price": 100,
-      "itemCount": 1,
-      "received": true,
-      "paid": true
-    },
-    {
-      "id": 1782661399094,
-      "time": "09:13 PM",
-      "name": "Small Chicken Loaded Chips",
-      "price": 60,
-      "itemCount": 1,
-      "received": true,
-      "paid": true
-    },
-    {
-      "id": 1782661404953,
-      "time": "09:13 PM",
-      "name": "Large Veg Loaded Chips",
-      "price": 70,
-      "itemCount": 1,
-      "received": true,
-      "paid": true
-    }
-  ]
+  "2026-06-28": []
 }
