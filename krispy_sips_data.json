@@ -1,5 +1,15 @@
 {
-  "2026-06-28": [],
+  "2026-06-28": [
+    {
+      "id": 1782664132968,
+      "time": "09:58 PM",
+      "name": "Large Chicken Loaded Chips",
+      "price": 100,
+      "itemCount": 1,
+      "received": false,
+      "paid": false
+    }
+  ],
   "2026-06-29": [],
   "2026-06-30": [],
   "2026-07-01": []
