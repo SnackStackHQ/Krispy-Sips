@@ -16,7 +16,7 @@
       "price": 60,
       "itemCount": 1,
       "received": false,
-      "paid": false
+      "paid": true
     },
     {
       "id": 1782661404953,
