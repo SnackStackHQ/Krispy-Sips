@@ -65,7 +65,6 @@
             background: var(--primary-dark);
         }
 
-        /* GitHub Sync Button Styling */
         .btn-sync {
             background-color: #4a4a5a;
             color: white;
@@ -84,13 +83,32 @@
             margin-top: 15px;
         }
 
+        .folder-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 8px;
+        }
+
         .folder-title {
             font-weight: bold;
             font-size: 0.9rem;
             text-transform: uppercase;
             color: #888;
-            margin-bottom: 8px;
-            display: block;
+        }
+
+        .download-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.2rem;
+            padding: 0;
+            transition: transform 0.2s;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.1);
         }
 
         .day-list {
@@ -128,7 +146,7 @@
 
         .tracker-section {
             flex: 1;
-            min-width: 0; /* Prevents flex items from overflowing */
+            min-width: 0; 
         }
 
         header {
@@ -138,7 +156,6 @@
             gap: 15px;
         }
 
-        /* Mobile Menu Toggle */
         .menu-toggle {
             display: none;
             background: none;
@@ -195,7 +212,6 @@
             margin-bottom: 12px;
         }
 
-        /* Quantity Selector Styling */
         .qty-container {
             display: flex;
             align-items: center;
@@ -219,9 +235,7 @@
             transition: background 0.2s;
         }
 
-        .qty-btn:hover {
-            background: #dee2e6;
-        }
+        .qty-btn:hover { background: #dee2e6; }
 
         .qty-display {
             font-weight: bold;
@@ -241,9 +255,7 @@
             font-weight: 500;
         }
 
-        .menu-card button.add-btn:hover {
-            background: #33333d;
-        }
+        .menu-card button.add-btn:hover { background: #33333d; }
 
         /* Order Table */
         .table-container {
@@ -251,7 +263,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            overflow-x: auto; /* Enable horizontal scroll on small screens */
+            overflow-x: auto; 
         }
 
         table {
@@ -271,13 +283,9 @@
             font-weight: 600;
         }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+        tr:last-child td { border-bottom: none; }
 
-        .checkbox-cell {
-            text-align: center;
-        }
+        .checkbox-cell { text-align: center; }
 
         .checkbox-cell input {
             transform: scale(1.2);
@@ -333,11 +341,8 @@
             margin-top: 5px;
         }
 
-        .stat-box .amount {
-            color: #2b9348;
-        }
+        .stat-box .amount { color: #2b9348; }
 
-        /* Mobile Overlay */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -348,9 +353,7 @@
 
         /* --- RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 1024px) {
-            #main-content {
-                flex-direction: column;
-            }
+            #main-content { flex-direction: column; }
             #summary-bar {
                 width: 100%;
                 position: static;
@@ -358,9 +361,7 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
-            .stat-box {
-                margin-bottom: 0;
-            }
+            .stat-box { margin-bottom: 0; }
         }
 
         @media (max-width: 768px) {
@@ -377,19 +378,12 @@
             #main-content { padding: 15px; gap: 15px; }
             header h1 { font-size: 1.4rem; }
             
-            .menu-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            #summary-bar {
-                grid-template-columns: 1fr;
-            }
+            .menu-grid { grid-template-columns: repeat(2, 1fr); }
+            #summary-bar { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 480px) {
-            .menu-grid {
-                grid-template-columns: 1fr;
-            }
+            .menu-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -403,9 +397,7 @@
             <button class="nav-btn" onclick="createNewDay()">+ Start New Day</button>
             <button class="nav-btn btn-sync" onclick="setupGitHub()">⚙ Configure GitHub</button>
             <div id="syncStatus">Local Mode</div>
-
-            <div id="history-container">
-                </div>
+            <div id="history-container"></div>
         </div>
     </div>
 
@@ -488,8 +480,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="order-rows">
-                        </tbody>
+                    <tbody id="order-rows"></tbody>
                 </table>
             </div>
         </div>
@@ -516,7 +507,6 @@
     </div>
 
     <script>
-        // System Data Structure & GitHub Config
         let salesData = JSON.parse(localStorage.getItem('krispy_sips_sales')) || {};
         let currentDayKey = ""; 
         let ghSha = ""; 
@@ -527,7 +517,6 @@
             document.getElementById('sidebarOverlay').classList.toggle('open');
         }
 
-        // Initial setup on boot
         window.onload = async function() {
             if (ghConfig.token && ghConfig.repo && ghConfig.owner) {
                 updateStatus("🔄 Syncing with GitHub...");
@@ -538,13 +527,11 @@
 
             const today = getFormattedDate(new Date());
             
-            // If data is empty after trying to fetch, initialize today
             if (Object.keys(salesData).length === 0 && !salesData[today]) {
                 salesData[today] = [];
                 saveData();
                 currentDayKey = today;
             } else {
-                // Load the most recent date available
                 currentDayKey = Object.keys(salesData).sort((a,b) => new Date(b) - new Date(a))[0] || today;
                 if(!salesData[currentDayKey]) salesData[currentDayKey] = [];
             }
@@ -553,7 +540,6 @@
             loadDayRecord(currentDayKey);
         };
 
-        // --- GITHUB SYNC LOGIC ---
         function updateStatus(text) {
             document.getElementById('syncStatus').innerText = text;
         }
@@ -573,9 +559,7 @@
         async function fetchFromGitHub() {
             const url = `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${ghConfig.file}`;
             try {
-                let response = await fetch(url, {
-                    headers: { 'Authorization': `token ${ghConfig.token}` }
-                });
+                let response = await fetch(url, { headers: { 'Authorization': `token ${ghConfig.token}` } });
                 if (response.ok) {
                     const json = await response.json();
                     ghSha = json.sha; 
@@ -604,19 +588,13 @@
             const cleanJsonString = JSON.stringify(salesData, null, 2);
             const base64Content = btoa(unescape(encodeURIComponent(cleanJsonString)));
 
-            const bodyData = {
-                message: `Update sales data: ${new Date().toLocaleTimeString()}`,
-                content: base64Content
-            };
+            const bodyData = { message: `Update sales data: ${new Date().toLocaleTimeString()}`, content: base64Content };
             if (ghSha) bodyData.sha = ghSha; 
 
             try {
                 let response = await fetch(url, {
                     method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${ghConfig.token}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Authorization': `token ${ghConfig.token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify(bodyData)
                 });
                 if (response.ok) {
@@ -626,18 +604,12 @@
                 } else {
                     updateStatus("❌ Cloud Overwrite Blocked");
                 }
-            } catch (e) {
-                console.error(e);
-                updateStatus("❌ Sync Error");
-            }
+            } catch (e) { updateStatus("❌ Sync Error"); }
         }
 
-        // --- APP LOGIC ---
         function getFormattedDate(dateObj) {
             let d = new Date(dateObj);
-            let month = '' + (d.getMonth() + 1);
-            let day = '' + d.getDate();
-            let year = d.getFullYear();
+            let month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
             if (month.length < 2) month = '0' + month;
             if (day.length < 2) day = '0' + day;
             return [year, month, day].join('-');
@@ -646,20 +618,17 @@
         function getMonthFolderName(dateString) {
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const parts = dateString.split('-');
-            const year = parts[0];
-            const monthIdx = parseInt(parts[1], 10) - 1;
-            return `${months[monthIdx]} ${year}`;
+            return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
         }
 
         function saveData() {
             localStorage.setItem('krispy_sips_sales', JSON.stringify(salesData));
-            syncToGitHub(); // Trigger sync whenever data is saved
+            syncToGitHub(); 
         }
 
         function changeQty(cardId, change) {
             const element = document.getElementById(`qty-${cardId}`);
-            let currentQty = parseInt(element.innerText, 10);
-            currentQty += change;
+            let currentQty = parseInt(element.innerText, 10) + change;
             if (currentQty < 1) currentQty = 1; 
             element.innerText = currentQty;
         }
@@ -667,64 +636,42 @@
         function createNewDay() {
             let customDate = prompt("Enter the date you wish to setup (YYYY-MM-DD format):", getFormattedDate(new Date()));
             if (!customDate) return;
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(customDate)) { alert("Invalid Date format."); return; }
 
-            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-            if (!datePattern.test(customDate)) {
-                alert("Invalid Date format. Please use YYYY-MM-DD.");
-                return;
-            }
-
-            if (!salesData[customDate]) {
-                salesData[customDate] = [];
-                saveData();
-            }
-            
+            if (!salesData[customDate]) { salesData[customDate] = []; saveData(); }
             currentDayKey = customDate;
             renderSidebar();
             loadDayRecord(currentDayKey);
-            
             if(window.innerWidth <= 768) toggleSidebar();
         }
 
         function loadDayRecord(dateKey) {
             currentDayKey = dateKey;
             document.getElementById('current-date-display').innerText = `Date: ${dateKey}`;
-            
             document.querySelectorAll('.day-item').forEach(el => el.classList.remove('active'));
             const activeEl = document.getElementById(`side-${dateKey}`);
             if(activeEl) activeEl.classList.add('active');
-
             renderOrdersTable();
-            
-            if(window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) {
-                toggleSidebar();
-            }
+            if(window.innerWidth <= 768 && document.getElementById('sidebar').classList.contains('open')) { toggleSidebar(); }
         }
 
         function addOrder(itemName, unitPrice, cardId) {
             const qtyElement = document.getElementById(`qty-${cardId}`);
             const quantity = parseInt(qtyElement.innerText, 10);
-            const finalPrice = unitPrice * quantity;
-            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-            const newOrderItem = {
+            
+            if (!salesData[currentDayKey]) salesData[currentDayKey] = [];
+            
+            salesData[currentDayKey].push({
                 id: Date.now(),
-                time: timeNow,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                 name: quantity > 1 ? `${itemName} (x${quantity})` : itemName,
-                price: finalPrice,
+                price: unitPrice * quantity,
                 itemCount: quantity,
                 received: false,
                 paid: false
-            };
-
-            if (!salesData[currentDayKey]) {
-                salesData[currentDayKey] = [];
-            }
-
-            salesData[currentDayKey].push(newOrderItem);
+            });
             saveData();
             renderOrdersTable();
-
             qtyElement.innerText = "1";
         }
 
@@ -743,45 +690,29 @@
         function renderOrdersTable() {
             const tbody = document.getElementById('order-rows');
             tbody.innerHTML = "";
-            const orders = salesData[currentDayKey] || [];
-
-            orders.forEach((order, index) => {
+            (salesData[currentDayKey] || []).forEach((order, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${order.time}</td>
                     <td><b>${order.name}</b></td>
                     <td>₹${order.price}</td>
-                    <td class="checkbox-cell">
-                        <input type="checkbox" ${order.received ? 'checked' : ''} onchange="toggleCheck(${index}, 'received')">
-                    </td>
-                    <td class="checkbox-cell">
-                        <input type="checkbox" ${order.paid ? 'checked' : ''} onchange="toggleCheck(${index}, 'paid')">
-                    </td>
-                    <td>
-                        <button class="delete-btn" onclick="deleteOrder(${index})">✕</button>
-                    </td>
+                    <td class="checkbox-cell"><input type="checkbox" ${order.received ? 'checked' : ''} onchange="toggleCheck(${index}, 'received')"></td>
+                    <td class="checkbox-cell"><input type="checkbox" ${order.paid ? 'checked' : ''} onchange="toggleCheck(${index}, 'paid')"></td>
+                    <td><button class="delete-btn" onclick="deleteOrder(${index})">✕</button></td>
                 `;
                 tbody.appendChild(tr);
             });
-
             calculateTotals();
         }
 
         function calculateTotals() {
-            const orders = salesData[currentDayKey] || [];
-            
-            let totalItems = 0;
-            let receivedCount = 0;
-            let expectedRev = 0;
-            let collectedRev = 0;
-
-            orders.forEach(order => {
+            let totalItems = 0, receivedCount = 0, expectedRev = 0, collectedRev = 0;
+            (salesData[currentDayKey] || []).forEach(order => {
                 expectedRev += order.price;
                 totalItems += (order.itemCount || 1);
                 if(order.received) receivedCount += (order.itemCount || 1);
                 if(order.paid) collectedRev += order.price;
             });
-
             document.getElementById('total-orders-count').innerText = totalItems;
             document.getElementById('orders-received-count').innerText = receivedCount;
             document.getElementById('expected-revenue').innerText = expectedRev;
@@ -795,28 +726,104 @@
 
             Object.keys(salesData).sort((a,b) => new Date(b) - new Date(a)).forEach(dateKey => {
                 let folderName = getMonthFolderName(dateKey);
-                if (!monthlyGroups[folderName]) {
-                    monthlyGroups[folderName] = [];
-                }
+                if (!monthlyGroups[folderName]) monthlyGroups[folderName] = [];
                 monthlyGroups[folderName].push(dateKey);
             });
 
             for (let folderName in monthlyGroups) {
                 const folderDiv = document.createElement('div');
                 folderDiv.className = 'folder-section';
-                
+                // Passing the array of dates joined by comma so the download function can easily split it
                 folderDiv.innerHTML = `
-                    <span class="folder-title">📁 ${folderName}</span>
+                    <div class="folder-header">
+                        <span class="folder-title">📁 ${folderName}</span>
+                        <button class="download-btn" onclick="downloadSnapshot('${folderName}', '${monthlyGroups[folderName].join(',')}')" title="Download Month Snapshot">📥</button>
+                    </div>
                     <ul class="day-list">
-                        ${monthlyGroups[folderName].map(dateStr => {
-                            return `<li class="day-item ${dateStr === currentDayKey ? 'active' : ''}" id="side-${dateStr}" onclick="loadDayRecord('${dateStr}')">
+                        ${monthlyGroups[folderName].map(dateStr => `
+                            <li class="day-item ${dateStr === currentDayKey ? 'active' : ''}" id="side-${dateStr}" onclick="loadDayRecord('${dateStr}')">
                                 <span>📅 ${dateStr}</span>
-                            </li>`;
-                        }).join('')}
+                            </li>
+                        `).join('')}
                     </ul>
                 `;
                 container.appendChild(folderDiv);
             }
+        }
+
+        // --- NEW: HTML5 CANVAS IMAGE GENERATOR ---
+        function downloadSnapshot(folderName, datesString) {
+            const dates = datesString.split(',');
+            let monthTotalItems = 0, monthReceivedCount = 0, monthExpectedRev = 0, monthCollectedRev = 0;
+
+            // Crunch the numbers for the entire month
+            dates.forEach(date => {
+                const orders = salesData[date] || [];
+                orders.forEach(order => {
+                    monthExpectedRev += order.price;
+                    monthTotalItems += (order.itemCount || 1);
+                    if(order.received) monthReceivedCount += (order.itemCount || 1);
+                    if(order.paid) monthCollectedRev += order.price;
+                });
+            });
+
+            // Set up the digital drawing board
+            const canvas = document.createElement('canvas');
+            canvas.width = 700;
+            canvas.height = 480;
+            const ctx = canvas.getContext('2d');
+
+            // 1. Draw solid dark background
+            ctx.fillStyle = '#1e1e24';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Draw Top Header & Subtitle
+            ctx.fillStyle = '#ffb703';
+            ctx.font = 'bold 38px "Segoe UI", Tahoma, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Krispy Sips: ${folderName} Snapshot`, canvas.width / 2, 70);
+
+            ctx.fillStyle = '#aaaaaa';
+            ctx.font = '16px "Segoe UI", Tahoma, sans-serif';
+            ctx.fillText(`Data Exported: ${new Date().toLocaleDateString()} | Total Tracking Days: ${dates.length}`, canvas.width / 2, 100);
+
+            // 3. Helper function to draw the individual stat boxes
+            function drawStatCard(x, y, label, value, valueColor) {
+                // Card background & border
+                ctx.fillStyle = '#2a2a35';
+                ctx.beginPath();
+                ctx.roundRect(x, y, 290, 130, 8); // x, y, width, height, radii
+                ctx.fill();
+                ctx.strokeStyle = '#3e3e4f';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Card Label
+                ctx.fillStyle = '#888888';
+                ctx.font = 'bold 14px "Segoe UI", Tahoma, sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(label.toUpperCase(), x + 25, y + 40);
+
+                // Card Value
+                ctx.fillStyle = valueColor;
+                ctx.font = 'bold 46px "Segoe UI", Tahoma, sans-serif';
+                ctx.fillText(value, x + 25, y + 100);
+            }
+
+            // 4. Draw the 4 data cards in a grid layout
+            drawStatCard(45, 140, 'Total Items Ordered', monthTotalItems, '#ffffff');
+            drawStatCard(365, 140, 'Orders Received', monthReceivedCount, '#4cc9f0');
+            drawStatCard(45, 290, 'Total Expected Revenue', `₹${monthExpectedRev}`, '#ffb703');
+            drawStatCard(365, 290, 'Total Cash Collected', `₹${monthCollectedRev}`, '#2b9348');
+
+            // 5. Convert drawing to a JPG and trigger browser download
+            const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+            const link = document.createElement('a');
+            link.download = `KrispySips_${folderName.replace(' ', '_')}_Snapshot.jpg`;
+            link.href = dataURL;
+            document.body.appendChild(link); // Append required for some browsers
+            link.click();
+            document.body.removeChild(link); // Clean up
         }
     </script>
 </body>
