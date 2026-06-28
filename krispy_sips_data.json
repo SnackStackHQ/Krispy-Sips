@@ -44,6 +44,15 @@
       "itemCount": 1,
       "received": false,
       "paid": false
+    },
+    {
+      "id": 1782664140728,
+      "time": "09:59 PM",
+      "name": "Small Veg Loaded Chips",
+      "price": 40,
+      "itemCount": 1,
+      "received": false,
+      "paid": false
     }
   ],
   "2026-06-29": [],
