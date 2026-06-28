@@ -91,7 +91,7 @@
       "name": "Large Chicken Loaded Chips (x3)",
       "price": 300,
       "itemCount": 3,
-      "received": false,
+      "received": true,
       "paid": false
     },
     {
