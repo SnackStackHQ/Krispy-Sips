@@ -109,7 +109,7 @@
       "name": "Boba Tea (x2)",
       "price": 240,
       "itemCount": 2,
-      "received": false,
+      "received": true,
       "paid": false
     }
   ],
