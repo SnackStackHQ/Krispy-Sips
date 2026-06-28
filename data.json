@@ -1,1 +1,48 @@
-
+{
+  "2026-06-28": {
+    "date": "2026-06-28",
+    "rows": [
+      {
+        "item": "",
+        "price": "",
+        "received": false,
+        "paid": false
+      },
+      {
+        "item": "",
+        "price": "",
+        "received": false,
+        "paid": false
+      },
+      {
+        "item": "",
+        "price": "",
+        "received": false,
+        "paid": false
+      }
+    ]
+  },
+  "2026-06-29": {
+    "date": "2026-06-29",
+    "rows": [
+      {
+        "item": "",
+        "price": "",
+        "received": false,
+        "paid": false
+      },
+      {
+        "item": "",
+        "price": "",
+        "received": false,
+        "paid": false
+      },
+      {
+        "item": "",
+        "price": "",
+        "received": false,
+        "paid": false
+      }
+    ]
+  }
+}
