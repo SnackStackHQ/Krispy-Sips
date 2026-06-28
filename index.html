@@ -3,151 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Food Stall Sales Tracker</title>
+    <title>Krispy Sips - Daily Sales Tracker</title>
     <style>
         :root {
-            --primary-color: #4f46e5;
-            --background: #f8fafc;
-            --panel-bg: #ffffff;
-            --text: #1e293b;
-            --border: #e2e8f0;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --primary: #ffb703;
+            --primary-dark: #fb8500;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #212529;
+            --border: #dee2e6;
         }
 
         body {
-            display: flex;
-            background-color: var(--background);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
             color: var(--text);
+            display: flex;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* NEW: Sidebar Style for accessing previous days & monthly folders */
+        /* Sidebar Styling */
         #sidebar {
             width: 280px;
-            background-color: var(--panel-bg);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
+            background-color: #1e1e24;
+            color: #fff;
             padding: 20px;
-            height: 100%;
+            display: flex;
+            flex-content: space-between;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
         }
 
-        .sidebar-header {
-            margin-bottom: 20px;
+        #sidebar h2 {
+            font-size: 1.4rem;
+            margin-top: 0;
+            color: var(--primary);
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
         }
 
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
+        .nav-btn {
+            background: var(--primary);
+            color: #1e1e24;
             border: none;
-            padding: 10px 15px;
+            padding: 12px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: bold;
+            font-size: 1rem;
             width: 100%;
+            margin-bottom: 20px;
             transition: background 0.2s;
         }
 
-        .btn:hover {
-            background-color: #4338ca;
+        .nav-btn:hover {
+            background: var(--primary-dark);
         }
 
-        .history-container {
-            flex-grow: 1;
-            overflow-y: auto;
+        .folder-section {
             margin-top: 15px;
         }
 
-        .month-folder {
-            margin-bottom: 15px;
-        }
-
-        .month-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #64748b;
-            margin-bottom: 5px;
-            padding-left: 5px;
-        }
-
-        .slide-link {
-            display: block;
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: var(--text);
-            text-decoration: none;
+        .folder-title {
+            font-weight: bold;
             font-size: 0.9rem;
-            margin-bottom: 4px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .day-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .day-item {
+            padding: 10px;
+            background: #2a2a35;
+            margin-bottom: 5px;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 0.9rem;
             transition: background 0.2s;
-        }
-
-        .slide-link:hover {
-            background-color: #f1f5f9;
-        }
-
-        .slide-link.active {
-            background-color: #e0e7ff;
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        /* Main Workspace Content Area */
-        #main-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background-color: var(--background);
-        }
-
-        header {
-            background-color: var(--panel-bg);
-            padding: 20px 40px;
-            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .date-picker-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .day-item:hover, .day-item.active {
+            background: #3e3e4f;
+            border-left: 4px solid var(--primary);
         }
 
-        .date-input {
-            padding: 6px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        /* Workspace Layout */
-        .workspace {
-            display: flex;
-            flex-grow: 1;
-            overflow: hidden;
+        /* Main Content Area */
+        #main-content {
+            flex: 1;
             padding: 30px;
+            overflow-y: auto;
+            display: flex;
             gap: 30px;
         }
 
-        .table-container {
-            flex-grow: 1;
-            background: var(--panel-bg);
+        .tracker-section {
+            flex: 1;
+        }
+
+        header {
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            margin: 0 0 5px 0;
+            font-size: 1.8rem;
+        }
+
+        .date-badge {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            overflow-y: auto;
-            padding: 20px;
-            height: 100%;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .menu-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.05rem;
+        }
+
+        .menu-card .price {
+            color: var(--primary-dark);
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .menu-card button {
+            background: #1e1e24;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Order Table */
+        .table-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
 
         table {
@@ -162,284 +189,293 @@
         }
 
         th {
-            background-color: #f8fafc;
-            color: #64748b;
+            background: #f1f3f5;
             font-weight: 600;
         }
 
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 6px 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 0.95rem;
+        tr:last-child td {
+            border-bottom: none;
         }
 
-        input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+        .checkbox-cell {
+            text-align: center;
+        }
+
+        .checkbox-cell input {
+            transform: scale(1.2);
             cursor: pointer;
         }
 
-        /* Auto Counting Sidebar */
+        .delete-btn {
+            background: #e63946;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Side Auto Counting Bar */
         #summary-bar {
             width: 300px;
-            background: var(--panel-bg);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             height: fit-content;
+            position: sticky;
+            top: 0;
         }
 
-        .summary-card {
-            background: #f8fafc;
+        #summary-bar h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+        }
+
+        .stat-box {
+            background: var(--bg);
             padding: 15px;
             border-radius: 6px;
-            border-left: 4px solid var(--primary-color);
+            margin-bottom: 15px;
         }
 
-        .summary-card.revenue { border-left-color: #10b981; }
-        .summary-card.pending { border-left-color: #f59e0b; }
-
-        .summary-label {
+        .stat-box label {
             font-size: 0.85rem;
-            color: #64748b;
+            color: #6c757d;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: bold;
         }
 
-        .summary-value {
-            font-size: 1.8rem;
-            font-weight: 700;
+        .stat-box div {
+            font-size: 1.6rem;
+            font-weight: bold;
             margin-top: 5px;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
+        .stat-box .amount {
+            color: #2b9348;
         }
     </style>
 </head>
 <body>
 
     <div id="sidebar">
-        <div class="sidebar-header">
-            <button class="btn" onclick="createNewSlide()">+ Add New Slide</button>
+        <div>
+            <h2>Krispy Sips Panel</h2>
+            <button class="nav-btn" onclick="createNewDay()">+ Start New Day</button>
+            <div id="history-container">
+                </div>
         </div>
-        <h3 style="font-size: 0.9rem; margin-bottom: 10px; color: #475569;">History & Folders</h3>
-        <div class="history-container" id="historyContainer">
-            </div>
     </div>
 
     <div id="main-content">
-        <header>
-            <h2 id="slideTitle">Daily Sales Record</h2>
-            <div class="date-picker-container">
-                <label for="slideDate" style="font-weight: 600;">Date:</label>
-                <input type="date" id="slideDate" class="date-input" onchange="handleDateChange(this.value)">
-            </div>
-        </header>
+        <div class="tracker-section">
+            <header>
+                <h1 id="view-title">Daily Sales Record</h1>
+                <span class="date-badge" id="current-date-display">Date: YYYY-MM-DD</span>
+            </header>
 
-        <div class="workspace">
+            <div class="menu-grid">
+                <div class="menu-card">
+                    <h3>Large Chicken Chips</h3>
+                    <div class="price">₹100</div>
+                    <button onclick="addOrder('Large Chicken Loaded Chips', 100)">Add Order</button>
+                </div>
+                <div class="menu-card">
+                    <h3>Small Chicken Chips</h3>
+                    <div class="price">₹60</div>
+                    <button onclick="addOrder('Small Chicken Loaded Chips', 60)">Add Order</button>
+                </div>
+                <div class="menu-card">
+                    <h3>Large Veg Chips</h3>
+                    <div class="price">₹70</div>
+                    <button onclick="addOrder('Large Veg Loaded Chips', 70)">Add Order</button>
+                </div>
+                <div class="menu-card">
+                    <h3>Small Veg Chips</h3>
+                    <div class="price">₹40</div>
+                    <button onclick="addOrder('Small Veg Loaded Chips', 40)">Add Order</button>
+                </div>
+                <div class="menu-card">
+                    <h3>Boba Tea</h3>
+                    <div class="price">₹120</div>
+                    <button onclick="addOrder('Boba Tea', 120)">Add Order</button>
+                </div>
+            </div>
+
             <div class="table-container">
-                <table id="salesTable">
+                <table>
                     <thead>
                         <tr>
-                            <th style="width: 10%;">Sl. No.</th>
-                            <th style="width: 45%;">Items</th>
-                            <th style="width: 15%;">Price (₹)</th>
-                            <th style="width: 15%; text-align: center;">Order Received</th>
-                            <th style="width: 15%; text-align: center;">Payment Done</th>
+                            <th>Time</th>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th style="text-align:center;">Received?</th>
+                            <th style="text-align:center;">Paid?</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
+                    <tbody id="order-rows">
                         </tbody>
                 </table>
-                <div class="action-buttons">
-                    <button class="btn" style="width: auto;" onclick="addNewRow()">+ Add Row</button>
-                </div>
             </div>
+        </div>
 
-            <div id="summary-bar">
-                <h3 style="font-size: 1.1rem; border-bottom: 2px solid var(--border); padding-bottom: 10px;">Daily Summary</h3>
-                
-                <div class="summary-card">
-                    <div class="summary-label">Total Orders Taken</div>
-                    <div class="summary-value" id="totalOrders">0</div>
-                </div>
-
-                <div class="summary-card revenue">
-                    <div class="summary-label">Total Revenue Collected</div>
-                    <div class="summary-value" id="totalRevenue">₹0.00</div>
-                </div>
-
-                <div class="summary-card pending">
-                    <div class="summary-label">Pending Payments</div>
-                    <div class="summary-value" id="pendingRevenue">₹0.00</div>
-                </div>
-
-                <div class="summary-card" style="border-left-color: #3b82f6;">
-                    <div class="summary-label">Orders Completed</div>
-                    <div class="summary-value" id="completedOrders">0</div>
-                </div>
+        <div id="summary-bar">
+            <h2>Live Counting Bar</h2>
+            <div class="stat-box">
+                <label>Total Orders</label>
+                <div id="total-orders-count">0</div>
+            </div>
+            <div class="stat-box">
+                <label>Orders Received</label>
+                <div id="orders-received-count" style="color: #0077b6;">0</div>
+            </div>
+            <div class="stat-box">
+                <label>Total Expected Revenue</label>
+                <div class="amount">₹<span id="expected-revenue">0</span></div>
+            </div>
+            <div class="stat-box">
+                <label>Total Cash Collected</label>
+                <div class="amount" style="color: #007f5f;">₹<span id="collected-revenue">0</span></div>
             </div>
         </div>
     </div>
 
     <script>
-        // Data Structure Storage Configuration 
-        let storeData = {};
-        let currentSlideId = "";
+        // System Data Structure
+        let salesData = JSON.parse(localStorage.getItem('krispy_sips_sales')) || {};
+        let currentDayKey = ""; 
 
+        // Initial setup on boot
         window.onload = function() {
-            loadFromLocalStorage();
-            
-            // Generate a starting slide for today if no records exist
-            if (Object.keys(storeData).length === 0) {
-                const today = new Date().toISOString().split('T')[0];
-                createSlideData(today);
-            } else {
-                const sortedIds = Object.keys(storeData).sort().reverse();
-                currentSlideId = sortedIds[0];
+            const today = getFormattedDate(new Date());
+            // If today doesn't exist in system records, initialize it automatically
+            if (!salesData[today]) {
+                salesData[today] = [];
+                saveData();
             }
-            
+            currentDayKey = today;
             renderSidebar();
-            renderActiveSlide();
+            loadDayRecord(currentDayKey);
         };
 
-        function loadFromLocalStorage() {
-            const data = localStorage.getItem('foodStallSalesData');
-            if (data) storeData = JSON.parse(data);
+        function getFormattedDate(dateObj) {
+            let d = new Date(dateObj);
+            let month = '' + (d.getMonth() + 1);
+            let day = '' + d.getDate();
+            let year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year, month, day].join('-');
         }
 
-        function saveToLocalStorage() {
-            localStorage.setItem('foodStallSalesData', JSON.stringify(storeData));
+        function getMonthFolderName(dateString) {
+            // Extracts YYYY-MM out of YYYY-MM-DD string to act as structural grouping folder name
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const parts = dateString.split('-');
+            const year = parts[0];
+            const monthIdx = parseInt(parts[1], 10) - 1;
+            return `${months[monthIdx]} ${year}`;
         }
 
-        function createSlideData(dateString) {
-            currentSlideId = dateString;
-            if (!storeData[currentSlideId]) {
-                storeData[currentSlideId] = {
-                    date: dateString,
-                    rows: [
-                        { item: "", price: "", received: false, paid: false },
-                        { item: "", price: "", received: false, paid: false },
-                        { item: "", price: "", received: false, paid: false }
-                    ]
-                };
+        function saveData() {
+            localStorage.setItem('krispy_sips_sales', JSON.stringify(salesData));
+        }
+
+        // Add a completely new custom date slide
+        function createNewDay() {
+            let customDate = prompt("Enter the date you wish to setup (YYYY-MM-DD format):", getFormattedDate(new Date()));
+            if (!customDate) return;
+
+            // Simple validation regex pattern check
+            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+            if (!datePattern.test(customDate)) {
+                alert("Invalid Date format. Please use YYYY-MM-DD.");
+                return;
             }
-            saveToLocalStorage();
-        }
 
-        // Feature Action: Create a new blank daily slide
-        function createNewSlide() {
-            const today = new Date().toISOString().split('T')[0];
-            let targetDate = today;
-            
-            // Loop checker if a slide on the current day already exists
-            if (storeData[targetDate]) {
-                let count = 1;
-                while (storeData[targetDate]) {
-                    let nextDay = new Date();
-                    nextDay.setDate(nextDay.getDate() + count);
-                    targetDate = nextDay.toISOString().split('T')[0];
-                    count++;
-                }
+            if (!salesData[customDate]) {
+                salesData[customDate] = [];
+                saveData();
             }
             
-            createSlideData(targetDate);
+            currentDayKey = customDate;
             renderSidebar();
-            renderActiveSlide();
+            loadDayRecord(currentDayKey);
         }
 
-        // Feature Action: Switch views between active / historical slides
-        function switchSlide(id) {
-            currentSlideId = id;
-            renderSidebar();
-            renderActiveSlide();
-        }
-
-        function handleDateChange(newDate) {
-            if (!newDate) return;
+        // Load targeted data row items to window layout
+        function loadDayRecord(dateKey) {
+            currentDayKey = dateKey;
+            document.getElementById('current-date-display').innerText = `Date: ${dateKey}`;
             
-            if (newDate !== currentSlideId) {
-                if (storeData[newDate]) {
-                    alert("A slide with this date already exists! Opening that slide instead.");
-                    currentSlideId = newDate;
-                } else {
-                    storeData[newDate] = storeData[currentSlideId];
-                    storeData[newDate].date = newDate;
-                    delete storeData[currentSlideId];
-                    currentSlideId = newDate;
-                }
-                saveToLocalStorage();
-                renderSidebar();
-                renderActiveSlide();
-            }
+            // Highlight current active day button item out of sidebar panel list items
+            document.querySelectorAll('.day-item').forEach(el => el.classList.remove('active'));
+            const activeEl = document.getElementById(`side-${dateKey}`);
+            if(activeEl) activeEl.classList.add('active');
+
+            renderOrdersTable();
         }
 
-        // Feature Action: Automated folder creation grouped by Year/Month
-        function renderSidebar() {
-            const container = document.getElementById('historyContainer');
-            container.innerHTML = "";
+        // Add new order record into selected active worksheet
+        function addOrder(itemName, price) {
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const newOrderItem = {
+                id: Date.now(),
+                time: timeNow,
+                name: itemName,
+                price: price,
+                received: false,
+                paid: false
+            };
 
-            const groups = {};
-            Object.keys(storeData).sort().reverse().forEach(id => {
-                const dateObj = new Date(id);
-                if(isNaN(dateObj)) return; 
-                
-                // Formats month block dynamically (e.g. "June 2026")
-                const monthYear = dateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-                
-                if (!groups[monthYear]) groups[monthYear] = [];
-                groups[monthYear].push(storeData[id]);
-            });
-
-            for (const [monthName, slides] of Object.entries(groups)) {
-                const folderDiv = document.createElement('div');
-                folderDiv.className = 'month-folder';
-                
-                const title = document.createElement('div');
-                title.className = 'month-title';
-                title.innerText = `📁 ${monthName}`;
-                folderDiv.appendChild(title);
-
-                slides.forEach(slide => {
-                    const link = document.createElement('a');
-                    link.className = `slide-link ${slide.date === currentSlideId ? 'active' : ''}`;
-                    
-                    const formattedDisplayDate = new Date(slide.date).toLocaleDateString('en-GB', {
-                        day: '2-digit', month: 'short', year: 'numeric'
-                    });
-                    
-                    link.innerText = `📄 ${formattedDisplayDate}`;
-                    link.onclick = () => switchSlide(slide.date);
-                    folderDiv.appendChild(link);
-                });
-
-                container.appendChild(folderDiv);
-            }
+            salesData[currentDayKey].push(newOrderItem);
+            saveData();
+            renderOrdersTable();
         }
 
-        function renderActiveSlide() {
-            const slide = storeData[currentSlideId];
-            document.getElementById('slideDate').value = slide.date;
-            
-            const tbody = document.getElementById('tableBody');
+        // Toggle properties checkboxes updates status
+        function toggleCheck(index, property) {
+            salesData[currentDayKey][index][property] = !salesData[currentDayKey][index][property];
+            saveData();
+            calculateTotals();
+        }
+
+        // Erase misclicked rows completely
+        function deleteOrder(index) {
+            salesData[currentDayKey].splice(index, 1);
+            saveData();
+            renderOrdersTable();
+        }
+
+        // Render main active sheet orders content visually
+        function renderOrdersTable() {
+            const tbody = document.getElementById('order-rows');
             tbody.innerHTML = "";
 
-            slide.rows.forEach((row, index) => {
+            const orders = salesData[currentDayKey] || [];
+
+            orders.forEach((order, index) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><input type="text" value="${row.item}" oninput="updateRowData(${index}, 'item', this.value)"></td>
-                    <td><input type="number" value="${row.price}" oninput="updateRowData(${index}, 'price', this.value)"></td>
-                    <td style="text-align:center;"><input type="checkbox" ${row.received ? 'checked' : ''} onchange="updateRowData(${index}, 'received', this.checked)"></td>
-                    <td style="text-align:center;"><input type="checkbox" ${row.paid ? 'checked' : ''} onchange="updateRowData(${index}, 'paid', this.checked)"></td>
+                    <td>${order.time}</td>
+                    <td><b>${order.name}</b></td>
+                    <td>₹${order.price}</td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" ${order.received ? 'checked' : ''} onchange="toggleCheck(${index}, 'received')">
+                    </td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" ${order.paid ? 'checked' : ''} onchange="toggleCheck(${index}, 'paid')">
+                    </td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteOrder(${index})">✕</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -447,45 +483,60 @@
             calculateTotals();
         }
 
-        function addNewRow() {
-            storeData[currentSlideId].rows.push({ item: "", price: "", received: false, paid: false });
-            saveToLocalStorage();
-            renderActiveSlide();
-        }
-
-        function updateRowData(index, field, value) {
-            storeData[currentSlideId].rows[index][field] = value;
-            saveToLocalStorage();
-            calculateTotals();
-        }
-
+        // Live Calculations Logic
         function calculateTotals() {
-            const rows = storeData[currentSlideId].rows;
-            let totalOrders = 0;
-            let totalRevenue = 0;
-            let pendingRevenue = 0;
-            let completedOrders = 0;
+            const orders = salesData[currentDayKey] || [];
+            
+            let totalOrders = orders.length;
+            let receivedCount = 0;
+            let expectedRev = 0;
+            let collectedRev = 0;
 
-            rows.forEach(row => {
-                const price = parseFloat(row.price) || 0;
-                
-                if (row.item.trim() !== "" || price > 0) {
-                    totalOrders++;
-                    if (row.paid) {
-                        totalRevenue += price;
-                    } else {
-                        pendingRevenue += price;
-                    }
-                    if (row.received && row.paid) {
-                        completedOrders++;
-                    }
-                }
+            orders.forEach(order => {
+                expectedRev += order.price;
+                if(order.received) receivedCount++;
+                if(order.paid) collectedRev += order.price;
             });
 
-            document.getElementById('totalOrders').innerText = totalOrders;
-            document.getElementById('totalRevenue').innerText = `₹${totalRevenue.toFixed(2)}`;
-            document.getElementById('pendingRevenue').innerText = `₹${pendingRevenue.toFixed(2)}`;
-            document.getElementById('completedOrders').innerText = completedOrders;
+            document.getElementById('total-orders-count').innerText = totalOrders;
+            document.getElementById('orders-received-count').innerText = receivedCount;
+            document.getElementById('expected-revenue').innerText = expectedRev;
+            document.getElementById('collected-revenue').innerText = collectedRev;
+        }
+
+        // Setup Sidebar Architecture Sorting Items Automatically into Dynamic Monthly Folder Groups
+        function renderSidebar() {
+            const container = document.getElementById('history-container');
+            container.innerHTML = "";
+
+            // Group dates keys structurally into matching months array baskets
+            let monthlyGroups = {};
+
+            Object.keys(salesData).sort((a,b) => new Date(b) - new Date(a)).forEach(dateKey => {
+                let folderName = getMonthFolderName(dateKey);
+                if (!monthlyGroups[folderName]) {
+                    monthlyGroups[folderName] = [];
+                }
+                monthlyGroups[folderName].push(dateKey);
+            });
+
+            // Dynamically write folders onto navigation panel view output area
+            for (let folderName in monthlyGroups) {
+                const folderDiv = document.createElement('div');
+                folderDiv.className = 'folder-section';
+                
+                folderDiv.innerHTML = `
+                    <span class="folder-title">📁 ${folderName}</span>
+                    <ul class="day-list">
+                        ${monthlyGroups[folderName].map(dateStr => {
+                            return `<li class="day-item ${dateStr === currentDayKey ? 'active' : ''}" id="side-${dateStr}" onclick="loadDayRecord('${dateStr}')">
+                                <span>📅 ${dateStr}</span>
+                            </li>`;
+                        }).join('')}
+                    </ul>
+                `;
+                container.appendChild(folderDiv);
+            }
         }
     </script>
 </body>
