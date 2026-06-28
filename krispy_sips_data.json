@@ -80,7 +80,7 @@
       "name": "Large Veg Loaded Chips",
       "price": 70,
       "itemCount": 1,
-      "received": false,
+      "received": true,
       "paid": false
     }
   ],
