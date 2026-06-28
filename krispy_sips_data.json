@@ -15,7 +15,7 @@
       "name": "Small Chicken Loaded Chips",
       "price": 60,
       "itemCount": 1,
-      "received": false,
+      "received": true,
       "paid": true
     },
     {
@@ -24,7 +24,7 @@
       "name": "Large Veg Loaded Chips",
       "price": 70,
       "itemCount": 1,
-      "received": false,
+      "received": true,
       "paid": true
     },
     {
@@ -33,7 +33,7 @@
       "name": "Boba Tea",
       "price": 120,
       "itemCount": 1,
-      "received": false,
+      "received": true,
       "paid": true
     }
   ]
