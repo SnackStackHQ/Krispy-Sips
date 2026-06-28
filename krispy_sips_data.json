@@ -8,6 +8,15 @@
       "itemCount": 1,
       "received": false,
       "paid": false
+    },
+    {
+      "id": 1782661399094,
+      "time": "09:13 PM",
+      "name": "Small Chicken Loaded Chips",
+      "price": 60,
+      "itemCount": 1,
+      "received": false,
+      "paid": false
     }
   ]
 }
