@@ -29,25 +29,6 @@
       "paid": true
     }
   ],
-  "2026-06-30": [
-    {
-      "id": 1782664192973,
-      "time": "09:59 PM",
-      "name": "Large Chicken Loaded Chips (x3)",
-      "price": 300,
-      "itemCount": 3,
-      "received": true,
-      "paid": true
-    },
-    {
-      "id": 1782664198333,
-      "time": "09:59 PM",
-      "name": "Small Veg Loaded Chips",
-      "price": 40,
-      "itemCount": 1,
-      "received": true,
-      "paid": true
-    }
-  ],
+  "2026-06-30": [],
   "2026-07-01": []
 }
