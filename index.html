@@ -32,7 +32,6 @@
             color: #fff;
             padding: 20px;
             display: flex;
-            flex-content: space-between;
             flex-direction: column;
             border-right: 1px solid var(--border);
             overflow-y: auto;
@@ -472,4 +471,153 @@
             let customDate = prompt("Enter the date you wish to setup (YYYY-MM-DD format):", getFormattedDate(new Date()));
             if (!customDate) return;
 
-            const datePattern = /^\d{4}-\d
+            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+            if (!datePattern.test(customDate)) {
+                alert("Invalid Date format. Please use YYYY-MM-DD.");
+                return;
+            }
+
+            if (!salesData[customDate]) {
+                salesData[customDate] = [];
+                saveData();
+            }
+            
+            currentDayKey = customDate;
+            renderSidebar();
+            loadDayRecord(currentDayKey);
+        }
+
+        function loadDayRecord(dateKey) {
+            currentDayKey = dateKey;
+            document.getElementById('current-date-display').innerText = `Date: ${dateKey}`;
+            
+            document.querySelectorAll('.day-item').forEach(el => el.classList.remove('active'));
+            const activeEl = document.getElementById(`side-${dateKey}`);
+            if(activeEl) activeEl.classList.add('active');
+
+            renderOrdersTable();
+        }
+
+        // FIXED FUNCTION: Now correctly accepts the cardId parameter!
+        function addOrder(itemName, unitPrice, cardId) {
+            const qtyElement = document.getElementById(`qty-${cardId}`);
+            const quantity = parseInt(qtyElement.innerText, 10);
+            const finalPrice = unitPrice * quantity;
+            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const newOrderItem = {
+                id: Date.now(),
+                time: timeNow,
+                name: quantity > 1 ? `${itemName} (x${quantity})` : itemName,
+                price: finalPrice,
+                itemCount: quantity,
+                received: false,
+                paid: false
+            };
+
+            // Safeguard against missing array setup
+            if (!salesData[currentDayKey]) {
+                salesData[currentDayKey] = [];
+            }
+
+            salesData[currentDayKey].push(newOrderItem);
+            saveData();
+            renderOrdersTable();
+
+            // Reset quantity back to 1 for the next order
+            qtyElement.innerText = "1";
+        }
+
+        function toggleCheck(index, property) {
+            salesData[currentDayKey][index][property] = !salesData[currentDayKey][index][property];
+            saveData();
+            calculateTotals();
+        }
+
+        function deleteOrder(index) {
+            salesData[currentDayKey].splice(index, 1);
+            saveData();
+            renderOrdersTable();
+        }
+
+        function renderOrdersTable() {
+            const tbody = document.getElementById('order-rows');
+            tbody.innerHTML = "";
+            const orders = salesData[currentDayKey] || [];
+
+            orders.forEach((order, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${order.time}</td>
+                    <td><b>${order.name}</b></td>
+                    <td>₹${order.price}</td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" ${order.received ? 'checked' : ''} onchange="toggleCheck(${index}, 'received')">
+                    </td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" ${order.paid ? 'checked' : ''} onchange="toggleCheck(${index}, 'paid')">
+                    </td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteOrder(${index})">✕</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            calculateTotals();
+        }
+
+        function calculateTotals() {
+            const orders = salesData[currentDayKey] || [];
+            
+            let totalItems = 0;
+            let receivedCount = 0;
+            let expectedRev = 0;
+            let collectedRev = 0;
+
+            orders.forEach(order => {
+                expectedRev += order.price;
+                totalItems += (order.itemCount || 1);
+                if(order.received) receivedCount += (order.itemCount || 1);
+                if(order.paid) collectedRev += order.price;
+            });
+
+            document.getElementById('total-orders-count').innerText = totalItems;
+            document.getElementById('orders-received-count').innerText = receivedCount;
+            document.getElementById('expected-revenue').innerText = expectedRev;
+            document.getElementById('collected-revenue').innerText = collectedRev;
+        }
+
+        function renderSidebar() {
+            const container = document.getElementById('history-container');
+            container.innerHTML = "";
+            let monthlyGroups = {};
+
+            Object.keys(salesData).sort((a,b) => new Date(b) - new Date(a)).forEach(dateKey => {
+                let folderName = getMonthFolderName(dateKey);
+                if (!monthlyGroups[folderName]) {
+                    monthlyGroups[folderName] = [];
+                }
+                monthlyGroups[folderName].push(dateKey);
+            });
+
+            for (let folderName in monthlyGroups) {
+                const folderDiv = document.createElement('div');
+                folderDiv.className = 'folder-section';
+                
+                folderDiv.innerHTML = `
+                    <span class="folder-title">📁 ${folderName}</span>
+                    <ul class="day-list">
+                        ${monthlyGroups[folderName].map(dateStr => {
+                            return `<li class="day-item ${dateStr === currentDayKey ? 'active' : ''}" id="side-${dateStr}" onclick="loadDayRecord('${dateStr}')">
+                                <span>📅 ${dateStr}</span>
+                            </li>`;
+                        }).join('')}
+                    </ul>
+                `;
+                container.appendChild(folderDiv);
+            }
+        }
+    </script>
+</body>
+</html>
