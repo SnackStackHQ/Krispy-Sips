@@ -16,7 +16,7 @@
       },
       {
         "item": "Boba Tea",
-        "price": "",
+        "price": "120",
         "received": false,
         "paid": false
       }
