@@ -34,7 +34,7 @@
       "price": 120,
       "itemCount": 1,
       "received": false,
-      "paid": false
+      "paid": true
     }
   ]
 }
