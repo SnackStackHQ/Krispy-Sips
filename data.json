@@ -18,6 +18,12 @@
         "item": "Boba Tea",
         "price": "120",
         "received": true,
+        "paid": true
+      },
+      {
+        "item": "",
+        "price": "",
+        "received": false,
         "paid": false
       }
     ]
