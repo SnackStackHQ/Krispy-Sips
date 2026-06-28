@@ -35,6 +35,15 @@
       "itemCount": 1,
       "received": false,
       "paid": false
+    },
+    {
+      "id": 1782664139526,
+      "time": "09:58 PM",
+      "name": "Large Chicken Loaded Chips",
+      "price": 100,
+      "itemCount": 1,
+      "received": false,
+      "paid": false
     }
   ],
   "2026-06-29": [],
