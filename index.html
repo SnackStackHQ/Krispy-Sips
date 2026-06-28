@@ -145,10 +145,14 @@
             padding: 15px;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .menu-card h3 {
-            margin: 0 0 8px 0;
+            margin: 0 0 4px 0;
             font-size: 1.05rem;
         }
 
@@ -158,7 +162,42 @@
             margin-bottom: 12px;
         }
 
-        .menu-card button {
+        /* Quantity Selector Styling */
+        .qty-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .qty-btn {
+            background: #e9ecef;
+            border: 1px solid var(--border);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #dee2e6;
+        }
+
+        .qty-display {
+            font-weight: bold;
+            font-size: 1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-card button.add-btn {
             background: #1e1e24;
             color: white;
             border: none;
@@ -166,6 +205,11 @@
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
+            font-weight: 500;
+        }
+
+        .menu-card button.add-btn:hover {
+            background: #33333d;
         }
 
         /* Order Table */
@@ -279,30 +323,59 @@
             </header>
 
             <div class="menu-grid">
-                <div class="menu-card">
+                <div class="menu-card" id="card-l-chick">
                     <h3>Large Chicken Chips</h3>
                     <div class="price">₹100</div>
-                    <button onclick="addOrder('Large Chicken Loaded Chips', 100)">Add Order</button>
+                    <div class="qty-container">
+                        <button class="qty-btn" onclick="changeQty('l-chick', -1)">-</button>
+                        <span class="qty-display" id="qty-l-chick">1</span>
+                        <button class="qty-btn" onclick="changeQty('l-chick', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addOrder('Large Chicken Loaded Chips', 100, 'l-chick')">Add Order</button>
                 </div>
-                <div class="menu-card">
+
+                <div class="menu-card" id="card-s-chick">
                     <h3>Small Chicken Chips</h3>
                     <div class="price">₹60</div>
-                    <button onclick="addOrder('Small Chicken Loaded Chips', 60)">Add Order</button>
+                    <div class="qty-container">
+                        <button class="qty-btn" onclick="changeQty('s-chick', -1)">-</button>
+                        <span class="qty-display" id="qty-s-chick">1</span>
+                        <button class="qty-btn" onclick="changeQty('s-chick', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addOrder('Small Chicken Loaded Chips', 60, 's-chick')">Add Order</button>
                 </div>
-                <div class="menu-card">
+
+                <div class="menu-card" id="card-l-veg">
                     <h3>Large Veg Chips</h3>
                     <div class="price">₹70</div>
-                    <button onclick="addOrder('Large Veg Loaded Chips', 70)">Add Order</button>
+                    <div class="qty-container">
+                        <button class="qty-btn" onclick="changeQty('l-veg', -1)">-</button>
+                        <span class="qty-display" id="qty-l-veg">1</span>
+                        <button class="qty-btn" onclick="changeQty('l-veg', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addOrder('Large Veg Loaded Chips', 70, 'l-veg')">Add Order</button>
                 </div>
-                <div class="menu-card">
+
+                <div class="menu-card" id="card-s-veg">
                     <h3>Small Veg Chips</h3>
                     <div class="price">₹40</div>
-                    <button onclick="addOrder('Small Veg Loaded Chips', 40)">Add Order</button>
+                    <div class="qty-container">
+                        <button class="qty-btn" onclick="changeQty('s-veg', -1)">-</button>
+                        <span class="qty-display" id="qty-s-veg">1</span>
+                        <button class="qty-btn" onclick="changeQty('s-veg', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addOrder('Small Veg Loaded Chips', 40, 's-veg')">Add Order</button>
                 </div>
-                <div class="menu-card">
+
+                <div class="menu-card" id="card-boba">
                     <h3>Boba Tea</h3>
                     <div class="price">₹120</div>
-                    <button onclick="addOrder('Boba Tea', 120)">Add Order</button>
+                    <div class="qty-container">
+                        <button class="qty-btn" onclick="changeQty('boba', -1)">-</button>
+                        <span class="qty-display" id="qty-boba">1</span>
+                        <button class="qty-btn" onclick="changeQty('boba', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addOrder('Boba Tea', 120, 'boba')">Add Order</button>
                 </div>
             </div>
 
@@ -327,7 +400,7 @@
         <div id="summary-bar">
             <h2>Live Counting Bar</h2>
             <div class="stat-box">
-                <label>Total Orders</label>
+                <label>Total Items Ordered</label>
                 <div id="total-orders-count">0</div>
             </div>
             <div class="stat-box">
@@ -353,7 +426,6 @@
         // Initial setup on boot
         window.onload = function() {
             const today = getFormattedDate(new Date());
-            // If today doesn't exist in system records, initialize it automatically
             if (!salesData[today]) {
                 salesData[today] = [];
                 saveData();
@@ -376,7 +448,6 @@
         }
 
         function getMonthFolderName(dateString) {
-            // Extracts YYYY-MM out of YYYY-MM-DD string to act as structural grouping folder name
             const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const parts = dateString.split('-');
             const year = parts[0];
@@ -388,156 +459,17 @@
             localStorage.setItem('krispy_sips_sales', JSON.stringify(salesData));
         }
 
-        // Add a completely new custom date slide
+        // Handle Quantity - / + Changes
+        function changeQty(cardId, change) {
+            const element = document.getElementById(`qty-${cardId}`);
+            let currentQty = parseInt(element.innerText, 10);
+            currentQty += change;
+            if (currentQty < 1) currentQty = 1; // prevents falling below 1
+            element.innerText = currentQty;
+        }
+
         function createNewDay() {
             let customDate = prompt("Enter the date you wish to setup (YYYY-MM-DD format):", getFormattedDate(new Date()));
             if (!customDate) return;
 
-            // Simple validation regex pattern check
-            const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-            if (!datePattern.test(customDate)) {
-                alert("Invalid Date format. Please use YYYY-MM-DD.");
-                return;
-            }
-
-            if (!salesData[customDate]) {
-                salesData[customDate] = [];
-                saveData();
-            }
-            
-            currentDayKey = customDate;
-            renderSidebar();
-            loadDayRecord(currentDayKey);
-        }
-
-        // Load targeted data row items to window layout
-        function loadDayRecord(dateKey) {
-            currentDayKey = dateKey;
-            document.getElementById('current-date-display').innerText = `Date: ${dateKey}`;
-            
-            // Highlight current active day button item out of sidebar panel list items
-            document.querySelectorAll('.day-item').forEach(el => el.classList.remove('active'));
-            const activeEl = document.getElementById(`side-${dateKey}`);
-            if(activeEl) activeEl.classList.add('active');
-
-            renderOrdersTable();
-        }
-
-        // Add new order record into selected active worksheet
-        function addOrder(itemName, price) {
-            const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const newOrderItem = {
-                id: Date.now(),
-                time: timeNow,
-                name: itemName,
-                price: price,
-                received: false,
-                paid: false
-            };
-
-            salesData[currentDayKey].push(newOrderItem);
-            saveData();
-            renderOrdersTable();
-        }
-
-        // Toggle properties checkboxes updates status
-        function toggleCheck(index, property) {
-            salesData[currentDayKey][index][property] = !salesData[currentDayKey][index][property];
-            saveData();
-            calculateTotals();
-        }
-
-        // Erase misclicked rows completely
-        function deleteOrder(index) {
-            salesData[currentDayKey].splice(index, 1);
-            saveData();
-            renderOrdersTable();
-        }
-
-        // Render main active sheet orders content visually
-        function renderOrdersTable() {
-            const tbody = document.getElementById('order-rows');
-            tbody.innerHTML = "";
-
-            const orders = salesData[currentDayKey] || [];
-
-            orders.forEach((order, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${order.time}</td>
-                    <td><b>${order.name}</b></td>
-                    <td>₹${order.price}</td>
-                    <td class="checkbox-cell">
-                        <input type="checkbox" ${order.received ? 'checked' : ''} onchange="toggleCheck(${index}, 'received')">
-                    </td>
-                    <td class="checkbox-cell">
-                        <input type="checkbox" ${order.paid ? 'checked' : ''} onchange="toggleCheck(${index}, 'paid')">
-                    </td>
-                    <td>
-                        <button class="delete-btn" onclick="deleteOrder(${index})">✕</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            calculateTotals();
-        }
-
-        // Live Calculations Logic
-        function calculateTotals() {
-            const orders = salesData[currentDayKey] || [];
-            
-            let totalOrders = orders.length;
-            let receivedCount = 0;
-            let expectedRev = 0;
-            let collectedRev = 0;
-
-            orders.forEach(order => {
-                expectedRev += order.price;
-                if(order.received) receivedCount++;
-                if(order.paid) collectedRev += order.price;
-            });
-
-            document.getElementById('total-orders-count').innerText = totalOrders;
-            document.getElementById('orders-received-count').innerText = receivedCount;
-            document.getElementById('expected-revenue').innerText = expectedRev;
-            document.getElementById('collected-revenue').innerText = collectedRev;
-        }
-
-        // Setup Sidebar Architecture Sorting Items Automatically into Dynamic Monthly Folder Groups
-        function renderSidebar() {
-            const container = document.getElementById('history-container');
-            container.innerHTML = "";
-
-            // Group dates keys structurally into matching months array baskets
-            let monthlyGroups = {};
-
-            Object.keys(salesData).sort((a,b) => new Date(b) - new Date(a)).forEach(dateKey => {
-                let folderName = getMonthFolderName(dateKey);
-                if (!monthlyGroups[folderName]) {
-                    monthlyGroups[folderName] = [];
-                }
-                monthlyGroups[folderName].push(dateKey);
-            });
-
-            // Dynamically write folders onto navigation panel view output area
-            for (let folderName in monthlyGroups) {
-                const folderDiv = document.createElement('div');
-                folderDiv.className = 'folder-section';
-                
-                folderDiv.innerHTML = `
-                    <span class="folder-title">📁 ${folderName}</span>
-                    <ul class="day-list">
-                        ${monthlyGroups[folderName].map(dateStr => {
-                            return `<li class="day-item ${dateStr === currentDayKey ? 'active' : ''}" id="side-${dateStr}" onclick="loadDayRecord('${dateStr}')">
-                                <span>📅 ${dateStr}</span>
-                            </li>`;
-                        }).join('')}
-                    </ul>
-                `;
-                container.appendChild(folderDiv);
-            }
-        }
-    </script>
-</body>
-</html>
+            const datePattern = /^\d{4}-\d
