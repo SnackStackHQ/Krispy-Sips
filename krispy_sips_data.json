@@ -64,6 +64,15 @@
       "itemCount": 1,
       "received": false,
       "paid": false
+    },
+    {
+      "id": 1782664173530,
+      "time": "09:59 PM",
+      "name": "Boba Tea",
+      "price": 120,
+      "itemCount": 1,
+      "received": false,
+      "paid": false
     }
   ],
   "2026-06-30": [],
